@@ -5,14 +5,12 @@ let
   clientaddr = "192.168.1.2";
   servernic = "enp193s0f0np0";
   clientnic = "enp193s0f1np1";
+  ssd="nvme1n1";
 in
 writeShellScriptBin "minio-server" ''
   mkdir -p $HOME/minio-data
-  sudo mount $HOME/minio-data
+  sudo mount /dev/${ssd} ~/minio-data
   sudo chown $USER $HOME/minio-data 
-
-  sudo ip netns del ns_server
-  sudo ip netns del ns_client
 
   sudo ip netns add ns_server
   sudo ip netns add ns_client
@@ -28,4 +26,9 @@ writeShellScriptBin "minio-server" ''
   sudo ip netns exec ns_client ip link set dev ${clientnic} up
 
   sudo ip netns exec ns_server ${minio}/bin/minio server $HOME/minio-data --address "${serveraddr}:9000" --console-address "${serveraddr}:9001"
+
+  sudo ip netns del ns_server
+  sudo ip netns del ns_client
+
+  sudo umount $HOME/minio-data
 ''
