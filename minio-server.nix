@@ -5,9 +5,11 @@ let
   clientaddr = "192.168.1.2";
   servernic = "enp193s0f0np0";
   clientnic = "enp193s0f1np1";
-  ssd="nvme1n1";
+  ssd="nvme2n1";
 in
 writeShellScriptBin "minio-server" ''
+  sudo modprobe ice
+
   mkdir -p $HOME/minio-data
   sudo mount /dev/${ssd} ~/minio-data
   sudo chown $USER $HOME/minio-data 
