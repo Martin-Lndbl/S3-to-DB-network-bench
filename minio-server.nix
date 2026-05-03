@@ -8,11 +8,13 @@ let
   ssd="nvme2n1";
 in
 writeShellScriptBin "minio-server" ''
+  CMD="${minio}/bin/minio server $HOME/minio-data --address '${serveraddr}:9000' --console-address '${serveraddr}:9001'"
+
   sudo modprobe ice
 
   mkdir -p $HOME/minio-data
   sudo mount /dev/${ssd} ~/minio-data
-  sudo chown $USER $HOME/minio-data 
+  sudo chown -R $USER $HOME/minio-data
 
   sudo ip netns add ns_server
   sudo ip netns add ns_client
@@ -27,7 +29,7 @@ writeShellScriptBin "minio-server" ''
   sudo ip netns exec ns_client ip addr add dev ${clientnic} ${clientaddr}/24
   sudo ip netns exec ns_client ip link set dev ${clientnic} up
 
-  sudo ip netns exec ns_server ${minio}/bin/minio server $HOME/minio-data --address "${serveraddr}:9000" --console-address "${serveraddr}:9001"
+  sudo ip netns exec ns_server su -c "$CMD" $USER
 
   sudo ip netns del ns_server
   sudo ip netns del ns_client

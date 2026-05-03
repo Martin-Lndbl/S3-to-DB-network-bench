@@ -23,6 +23,11 @@
       rec {
         packages.minio-server = pkgs.minio-server;
         packages.duckdb-minio = pkgs.duckdb-minio;
+        packages.setup-minio = pkgs.setup-minio;
+        apps.setup-minio = {
+          type = "app";
+          program = "${packages.setup-minio.outPath}/bin/setup-minio";
+        };
         apps.minio-server = {
           type = "app";
           program = "${packages.minio-server.outPath}/bin/minio-server";
@@ -37,6 +42,7 @@
             minio
             minio-client
             duckdb
+            flamegraph
             btop
           ];
 
