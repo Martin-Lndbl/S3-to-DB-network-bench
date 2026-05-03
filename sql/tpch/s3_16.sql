@@ -1,4 +1,4 @@
-Srange(1, 23)ELECT
+SELECT
     p_brand,
     p_type,
     p_size,
