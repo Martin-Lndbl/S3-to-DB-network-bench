@@ -2,3 +2,8 @@
 *.folded
 *.perf
 perf.*
+.direnv
+*.csv
+*.png
+*.pdf
+result

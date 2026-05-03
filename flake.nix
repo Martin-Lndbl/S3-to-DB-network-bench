@@ -23,8 +23,8 @@
       rec {
         packages.nic_minio = pkgs.nic_minio;
         packages.lo_minio = pkgs.lo_minio;
-        packages.nic_duckdb= pkgs.nic_duckdb;
-        packages.lo_duckdb= pkgs.lo_duckdb;
+        packages.nic_duckdb = pkgs.nic_duckdb;
+        packages.lo_duckdb = pkgs.lo_duckdb;
         packages.setup-minio = pkgs.setup-minio;
 
         apps.setup-minio = {
@@ -39,11 +39,11 @@
           type = "app";
           program = "${packages.lo_minio.outPath}/bin/lo_minio";
         };
-        apps.nic_duckdb= {
+        apps.nic_duckdb = {
           type = "app";
           program = "${packages.nic_duckdb.outPath}/bin/nic_duckdb";
         };
-        apps.lo_duckdb= {
+        apps.lo_duckdb = {
           type = "app";
           program = "${packages.lo_duckdb.outPath}/bin/lo_duckdb";
         };
@@ -56,6 +56,12 @@
             flamegraph
             btop
             bpftrace
+            nload
+
+            python3Packages.pandas
+            python3Packages.matplotlib
+            python3Packages.seaborn
+            pyright
           ];
 
         };

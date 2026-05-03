@@ -10,7 +10,12 @@ writeShellScriptBin "lo_minio" ''
   sudo mount /dev/${ssd} ~/minio-data
   sudo chown -R $USER $HOME/minio-data
 
-  ${minio}/bin/minio server $HOME/minio-data --address '${serveraddr}:9000' --console-address '${serveraddr}:9001'
+  ${minio}/bin/minio server $HOME/minio-data --address '${serveraddr}:9000' --console-address '${serveraddr}:9001' 2>&1 &
+
+  MINIO_PID=$!
+  echo "TOKILL: $MINIO_PID"
+
+  wait $MINIO_PID
 
   sudo umount $HOME/minio-data
 ''

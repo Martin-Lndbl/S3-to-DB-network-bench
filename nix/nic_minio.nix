@@ -29,7 +29,14 @@ writeShellScriptBin "nic_minio" ''
   sudo ip netns exec ns_client ip addr add dev ${clientnic} ${clientaddr}/24
   sudo ip netns exec ns_client ip link set dev ${clientnic} up
 
-  sudo ip netns exec ns_server su -c "$CMD" $USER
+  sudo ip netns exec ns_server su -c "$CMD" $USER 2>&1 &
+
+  MINIO_PID=$!
+  echo "TOKILL: $MINIO_PID"
+
+  wait $MINIO_PID
+
+
 
   sudo ip netns del ns_server
   sudo ip netns del ns_client
