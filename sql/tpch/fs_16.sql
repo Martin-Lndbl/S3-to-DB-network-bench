@@ -1,11 +1,11 @@
-Srange(1, 23)ELECT
+SELECT
     p_brand,
     p_type,
     p_size,
     count(DISTINCT ps_suppkey) AS supplier_cnt
 FROM
-    read_parquet('s3://duckdb-storage/partsupp.parquet'),
-    read_parquet('s3://duckdb-storage/part.parquet')
+    read_parquet('/scratch/ilya/tpch300/partsupp.parquet'),
+    read_parquet('/scratch/ilya/tpch300/part.parquet')
 WHERE
     p_partkey = ps_partkey
     AND p_brand <> 'Brand#45'
@@ -15,7 +15,7 @@ WHERE
         SELECT
             s_suppkey
         FROM
-            read_parquet('s3://duckdb-storage/supplier.parquet')
+            read_parquet('/scratch/ilya/tpch300/supplier.parquet')
         WHERE
             s_comment LIKE '%Customer%Complaints%')
 GROUP BY

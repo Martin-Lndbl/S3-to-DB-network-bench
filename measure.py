@@ -17,13 +17,26 @@ def enqueue_output(out, queue):
     out.close()
 
 # List of commands with optional service start command (name, command, outfile, service_command, service_command_wait_for_line)
+# commands = [
+#     ("filesystem", "nix run .#lo_duckdb -- -f sql/tpch/fs_09.sql", "tpch09.csv", None, None),
+#     ("filesystem", "nix run .#lo_duckdb -- -f sql/tpch/fs_11.sql", "tpch11.csv", None, None),
+#     ("loopback", "nix run .#lo_duckdb -- -f sql/tpch/s3_09.sql", "tpch09.csv", "nix run .#lo_minio", "Docs: https://docs.min.io"),
+#     ("loopback", "nix run .#lo_duckdb -- -f sql/tpch/s3_11.sql", "tpch11.csv", "nix run .#lo_minio", "Docs: https://docs.min.io"),
+#     ("network card", "nix run .#nic_duckdb -- -f sql/tpch/s3_09.sql", "tpch09.csv", "nix run .#nic_minio", "Docs: https://docs.min.io"),
+#     ("network card", "nix run .#nic_duckdb -- -f sql/tpch/s3_11.sql", "tpch11.csv", "nix run .#nic_minio", "Docs: https://docs.min.io"),
+# ]
+
+TCPHQUERIES = range(1, 23)
+
 commands = [
-    ("filesystem", "nix run .#lo_duckdb -- -f sql/tpch/fs_09.sql", "tpch09.csv", None, None),
-    ("filesystem", "nix run .#lo_duckdb -- -f sql/tpch/fs_11.sql", "tpch11.csv", None, None),
-    ("loopback", "nix run .#lo_duckdb -- -f sql/tpch/s3_11.sql", "tpch09.csv", "nix run .#lo_minio", "Docs: https://docs.min.io"),
-    ("loopback", "nix run .#lo_duckdb -- -f sql/tpch/s3_11.sql", "tpch11.csv", "nix run .#lo_minio", "Docs: https://docs.min.io"),
-    ("network card", "nix run .#nic_duckdb -- -f sql/tpch/s3_11.sql", "tpch09.csv", "nix run .#nic_minio", "Docs: https://docs.min.io"),
-    ("network card", "nix run .#nic_duckdb -- -f sql/tpch/s3_11.sql", "tpch11.csv", "nix run .#nic_minio", "Docs: https://docs.min.io"),
+    ("filesystem", f"nix run .#lo_duckdb -- -f sql/tpch/fs_{i:02d}.sql", f"tpch{i:02d}.csv", None, None) 
+    for i in TCPHQUERIES
+] + [
+    ("loopback", f"nix run .#lo_duckdb -- -f sql/tpch/s3_{i:02d}.sql", f"tpch{i:02d}.csv", "nix run .#lo_minio", "Docs: https://docs.min.io") 
+    for i in TCPHQUERIES
+] + [
+    ("network card", f"nix run .#nic_duckdb -- -f sql/tpch/s3_{i:02d}.sql", f"tpch{i:02d}.csv", "nix run .#nic_minio", "Docs: https://docs.min.io")
+    for i in TCPHQUERIES
 ]
 
 runtime_pattern = re.compile(r"Run Time \(s\):\s*real\s+([\d\.]+)\s+user\s+([\d\.]+)\s+sys\s+([\d\.]+)")
