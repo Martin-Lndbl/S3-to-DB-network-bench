@@ -7,7 +7,7 @@ let
   clientnic = "enp193s0f1np1";
   ssd="nvme2n1";
 in
-writeShellScriptBin "minio-server" ''
+writeShellScriptBin "nic_minio" ''
   CMD="${minio}/bin/minio server $HOME/minio-data --address '${serveraddr}:9000' --console-address '${serveraddr}:9001'"
 
   sudo modprobe ice

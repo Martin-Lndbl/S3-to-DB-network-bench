@@ -17,24 +17,35 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ (import ./overlays.nix { inherit inputs; }) ];
+          overlays = [ (import ./nix/overlays.nix { inherit inputs; }) ];
         };
       in
       rec {
-        packages.minio-server = pkgs.minio-server;
-        packages.duckdb-minio = pkgs.duckdb-minio;
+        packages.nic_minio = pkgs.nic_minio;
+        packages.lo_minio = pkgs.lo_minio;
+        packages.nic_duckdb= pkgs.nic_duckdb;
+        packages.lo_duckdb= pkgs.lo_duckdb;
         packages.setup-minio = pkgs.setup-minio;
+
         apps.setup-minio = {
           type = "app";
           program = "${packages.setup-minio.outPath}/bin/setup-minio";
         };
-        apps.minio-server = {
+        apps.nic_minio = {
           type = "app";
-          program = "${packages.minio-server.outPath}/bin/minio-server";
+          program = "${packages.nic_minio.outPath}/bin/nic_minio";
         };
-        apps.duckdb-minio = {
+        apps.lo_minio = {
           type = "app";
-          program = "${packages.duckdb-minio.outPath}/bin/duckdb-minio";
+          program = "${packages.lo_minio.outPath}/bin/lo_minio";
+        };
+        apps.nic_duckdb= {
+          type = "app";
+          program = "${packages.nic_duckdb.outPath}/bin/nic_duckdb";
+        };
+        apps.lo_duckdb= {
+          type = "app";
+          program = "${packages.lo_duckdb.outPath}/bin/lo_duckdb";
         };
         devShell = pkgs.mkShell {
 
@@ -44,6 +55,7 @@
             duckdb
             flamegraph
             btop
+            bpftrace
           ];
 
         };
