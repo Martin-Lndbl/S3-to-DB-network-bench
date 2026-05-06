@@ -27,6 +27,7 @@ def enqueue_output(out, queue):
 # ]
 
 TCPHQUERIES = range(1, 23)
+ITERATIONS = 20
 
 commands = [
     ("filesystem", f"nix run .#lo_duckdb -- -f sql/tpch/fs_{i:02d}.sql", f"tpch{i:02d}.csv", None, None) 
@@ -42,7 +43,6 @@ commands = [
 runtime_pattern = re.compile(r"Run Time \(s\):\s*real\s+([\d\.]+)\s+user\s+([\d\.]+)\s+sys\s+([\d\.]+)")
 runtimes_by_outfile = defaultdict(list)
 
-ITERATIONS = 1
 
 for name, command, outfile, service_command, wait_for_line in commands:
     print(f"Executing command: '{command}' with output file: {outfile}")
@@ -70,8 +70,8 @@ for name, command, outfile, service_command, wait_for_line in commands:
                 if match: 
                     killpid = int(match.group(1))
 
-    print(f"Starting measurement loop")
     for i in range(ITERATIONS):
+        print(f"Run {i+1:02d}")
         start_time = time.time()
         
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
@@ -83,8 +83,6 @@ for name, command, outfile, service_command, wait_for_line in commands:
             runtimes_by_outfile[outfile].append([name, i+1, real_time, user_time, sys_time])
         else:
             print(f"Error parsing runtime from attempt {i+1} for command: {name}")
-        
-        print(f"Run {i+1} for command '{name}' completed.")
 
     if service_command and service_process and killpid:
         print(f"Stopping {service_command}")
