@@ -8,7 +8,7 @@ let
   ssd="nvme2n1";
 in
 writeShellScriptBin "nic_minio" ''
-  CMD="${minio}/bin/minio server $HOME/minio-data --address '${serveraddr}:9000' --console-address '${serveraddr}:9001'"
+  CMD="taskset -c 64-95 ${minio}/bin/minio server $HOME/minio-data --address '${serveraddr}:9000' --console-address '${serveraddr}:9001'"
 
   sudo modprobe ice
 
