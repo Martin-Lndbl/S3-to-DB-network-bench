@@ -14,7 +14,7 @@ nix run .#nic_minio
 
 #### Terminal 2
 ```bash
-nix run .#nic_duckdb -- -f ./sql/tpch/q1.sql
+nix run .#nic_duckdb -- -f ./sql/tpch/s3_01.sql
 ```
 - Starts duckdb in corresponding network namespace
 - Sets up credentials and config for S3 requests
