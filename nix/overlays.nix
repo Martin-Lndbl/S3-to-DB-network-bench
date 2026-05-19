@@ -5,5 +5,4 @@ final: _prev: {
   lo_minio = _prev.callPackage ./lo_minio.nix { };
   nic_duckdb = _prev.callPackage ./nic_duckdb.nix { };
   lo_duckdb = _prev.callPackage ./lo_duckdb.nix { };
-  setup-minio = _prev.callPackage ./setup-minio.nix { };
 }

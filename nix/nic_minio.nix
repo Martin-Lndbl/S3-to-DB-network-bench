@@ -3,8 +3,10 @@
 let
   serveraddr = "192.168.1.1";
   clientaddr = "192.168.1.2";
-  servernic = "enp193s0f0v0";
-  clientnic = "enp193s0f1v0";
+  # servernic = "enp193s0f0v0";
+  # clientnic = "enp193s0f1v0";
+  servernic = "enp193s0f0np0";
+  clientnic = "enp193s0f1np1";
   ssd="nvme2n1";
 in
 writeShellScriptBin "nic_minio" ''

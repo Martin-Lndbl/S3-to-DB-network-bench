@@ -25,12 +25,7 @@
         packages.lo_minio = pkgs.lo_minio;
         packages.nic_duckdb = pkgs.nic_duckdb;
         packages.lo_duckdb = pkgs.lo_duckdb;
-        packages.setup-minio = pkgs.setup-minio;
 
-        apps.setup-minio = {
-          type = "app";
-          program = "${packages.setup-minio.outPath}/bin/setup-minio";
-        };
         apps.nic_minio = {
           type = "app";
           program = "${packages.nic_minio.outPath}/bin/nic_minio";
