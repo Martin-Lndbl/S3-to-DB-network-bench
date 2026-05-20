@@ -1,6 +1,5 @@
 # S3-to-DB-network-bench
 
-
 ### Usage
 #### Setup
 ```bash
@@ -29,3 +28,16 @@ just args="-f ./sql/tpch/s3_01.sql" duckdb_netns
 just clean
 ```
 - Destroys namespaces and unmounts disk on exit
+
+
+### DuckVM
+Project includes a virtual machine with an attached virtual nic
+```bash
+just duckVM
+```
+This can be used together with the `minio_netns` target
+- Inside the VM (after starting minio on the host) 
+```bash
+just setup
+just ping
+```
