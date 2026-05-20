@@ -32,34 +32,10 @@
           program = nixpkgs.lib.getExe self.nixosConfigurations.${name}.config.system.build.vm;
         };
       in
-      rec {
-
-        packages = {
-          nic_minio = pkgs.nic_minio;
-          lo_minio = pkgs.lo_minio;
-          nic_duckdb = pkgs.nic_duckdb;
-          lo_duckdb = pkgs.lo_duckdb;
-        };
+      {
 
         apps = {
           duckVM = mkVM "duckVM";
-          nic_minio = {
-            type = "app";
-            program = "${packages.nic_minio.outPath}/bin/nic_minio";
-          };
-          lo_minio = {
-            type = "app";
-            program = "${packages.lo_minio.outPath}/bin/lo_minio";
-          };
-          nic_duckdb = {
-            type = "app";
-            program = "${packages.nic_duckdb.outPath}/bin/nic_duckdb";
-          };
-          lo_duckdb = {
-            type = "app";
-            program = "${packages.lo_duckdb.outPath}/bin/lo_duckdb";
-          };
-
         };
 
         devShell = pkgs.mkShell {
