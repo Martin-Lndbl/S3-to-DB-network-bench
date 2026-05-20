@@ -4,6 +4,24 @@
   pkgs,
   ...
 }:
+let
+  justfile = pkgs.writeTextFile {
+    name = "justfile";
+    text =
+      # justfile
+      ''
+        setup:
+          sudo ip link set dev eth1 mtu 9000
+          sudo ip addr add dev eth1 192.168.1.2/24
+          sudo ip link set dev eth1 up
+
+          mc alias set 'myminio' 'http://192.168.1.1:9000' 'minioadmin' 'minioadmin'
+
+        ping:
+          mc ping myminio
+      '';
+  };
+in
 {
   boot.kernelModules = [ "kvm-amd" ];
   boot.initrd.availableKernelModules = [ "iavf" ];
@@ -23,6 +41,10 @@
       ];
     };
   };
+
+  system.activationScripts.justfile.text = ''
+    ln -sf ${justfile} /root/justfile
+  '';
 
   environment.systemPackages = with pkgs; [
     gdb
