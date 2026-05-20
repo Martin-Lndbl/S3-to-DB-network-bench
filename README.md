@@ -2,19 +2,30 @@
 
 
 ### Usage
-#### Terminal 1
+#### Setup
 ```bash
-nix run .#nic_minio
+just setup
 ```
 - Creates network namespaces
 - Mounts disk
+
+#### Terminal 1
+```bash
+just runner="taskset -c 16-31" minio_netns
+```
 - Starts MinIO
-- Destroys namespaces and unmounts disk on exit
 
 
 #### Terminal 2
 ```bash
-nix run .#nic_duckdb -- -f ./sql/tpch/s3_01.sql
+just args="-f ./sql/tpch/s3_01.sql" duckdb_netns
 ```
 - Starts duckdb in corresponding network namespace
 - Sets up credentials and config for S3 requests
+- If args are provided: Executes corresponding query
+
+#### Teardown
+```bash
+just clean
+```
+- Destroys namespaces and unmounts disk on exit

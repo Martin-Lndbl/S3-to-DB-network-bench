@@ -7,3 +7,4 @@ perf.*
 *.png
 *.pdf
 result
+nixos.qcow2
