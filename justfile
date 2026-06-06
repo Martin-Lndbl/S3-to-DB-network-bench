@@ -21,9 +21,18 @@ setup:
   sudo modprobe ice
   sudo modprobe vfio-pci
 
+  # Create a vfio-pci interface to pass to duckVM
   echo 0 | sudo tee /sys/class/net/{{clientnic}}/device/sriov_numvfs
   echo 1 | sudo tee /sys/class/net/{{clientnic}}/device/sriov_numvfs
   VF_PCI_ADDR=$(basename "$(readlink /sys/class/net/{{clientnic}}/device/virtfn0)")
+  echo "${VF_PCI_ADDR}" | sudo tee /sys/bus/pci/devices/${VF_PCI_ADDR}/driver/unbind
+  echo "vfio-pci" | sudo tee /sys/bus/pci/devices/${VF_PCI_ADDR}/driver_override > /dev/null
+  echo "${VF_PCI_ADDR}" | sudo tee /sys/bus/pci/drivers_probe > /dev/null
+
+  # Create a vfio-pci interface to pass to minioVM
+  echo 0 | sudo tee /sys/class/net/{{servernic}}/device/sriov_numvfs
+  echo 1 | sudo tee /sys/class/net/{{servernic}}/device/sriov_numvfs
+  VF_PCI_ADDR=$(basename "$(readlink /sys/class/net/{{servernic}}/device/virtfn0)")
   echo "${VF_PCI_ADDR}" | sudo tee /sys/bus/pci/devices/${VF_PCI_ADDR}/driver/unbind
   echo "vfio-pci" | sudo tee /sys/bus/pci/devices/${VF_PCI_ADDR}/driver_override > /dev/null
   echo "${VF_PCI_ADDR}" | sudo tee /sys/bus/pci/drivers_probe > /dev/null
@@ -48,6 +57,7 @@ clean:
   sudo ip netns delete {{ns_server}}
   sudo ip netns delete {{ns_client}}
   echo 0 | sudo tee /sys/class/net/{{clientnic}}/device/sriov_numvfs
+  echo 0 | sudo tee /sys/class/net/{{servernic}}/device/sriov_numvfs
 
 # Run a minio server in the local network
 minio_local:

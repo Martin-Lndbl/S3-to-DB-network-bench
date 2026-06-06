@@ -10,15 +10,17 @@ let
     text =
       # justfile
       ''
+            
         setup:
+          mkdir -p ~/minio-data
+
           sudo ip link set dev eth1 mtu 9000
-          sudo ip addr add dev eth1 192.168.1.2/24
+          sudo ip addr add dev eth1 192.168.1.1/24
           sudo ip link set dev eth1 up
 
-          mc alias set 'myminio' 'http://192.168.1.1:9000' 'minioadmin' 'minioadmin'
 
-        ping:
-          mc ping myminio
+        run:
+          minio server ~/minio-data --address '192.168.1.1:9000' --console-address '192.168.1.1:9001'
       '';
   };
 in
@@ -37,7 +39,7 @@ in
       graphics = false;
       qemu.options = [
         "-device"
-        "vfio-pci,host=c1:11.0,id=netvf0"
+        "vfio-pci,host=c1:01.0,id=netvf0"
       ];
     };
   };
@@ -52,12 +54,16 @@ in
     gcc
     neovim
     pciutils
-    minio-client
+    minio
     duckdb
     just
   ];
 
-  networking.hostName = "duckVM";
+  networking.firewall.allowedTCPPorts = [
+    9000
+    9001
+  ];
+  networking.hostName = "minioVM";
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   system.stateVersion = "25.11";
 }

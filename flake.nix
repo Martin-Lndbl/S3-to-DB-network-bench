@@ -18,6 +18,11 @@
         modules = [ ./nix/duckVM.nix ];
       };
 
+      nixosConfigurations.minioVM = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [ ./nix/minioVM.nix ];
+      };
+
     }
     // flake-utils.lib.eachDefaultSystem (
       system:
@@ -36,6 +41,7 @@
 
         apps = {
           duckVM = mkVM "duckVM";
+          minioVM = mkVM "minioVM";
         };
 
         devShell = pkgs.mkShell {
